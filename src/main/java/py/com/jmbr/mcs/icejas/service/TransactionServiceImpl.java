@@ -25,13 +25,12 @@ public class TransactionServiceImpl implements TransactionService{
         TransactionPostResData result = new TransactionPostResData();
         TransactionPostRes resultData = new TransactionPostRes();
         Transaction transaction = req.getTransaction();
-
         String logId = RequestUtil.getLogId();
         
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Starting add transaction",req);
 
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add transaction ",transaction);
-        Integer transactionId = transactionDAO.addTransaction(transaction);
+        Integer transactionId = transactionDAO.addTransaction(transaction,req.getChurch().getId(),req.getTransactionType().getId(), req.getUserId());
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add transaction id= ",transactionId);
          
         BigDecimal currentAmount = req.getChurch().getCurrentBalance();
@@ -44,13 +43,12 @@ public class TransactionServiceImpl implements TransactionService{
             totalAmount.add(transaction.getAmount());
 
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add balance_history totalAmount =",totalAmount);
-        boolean isBalanceHistoryInserted= transactionDAO.addBalanceHistory(req.getChurch().getId(),totalAmount,transactionId,previousAmount);
+        boolean isBalanceHistoryInserted= transactionDAO.addBalanceHistory(logId,req.getChurch().getId(),totalAmount,transactionId,previousAmount);
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add balance_history result=",isBalanceHistoryInserted);
 
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before update current_balance=",null);
-        boolean isUpdateBalanceChurch = transactionDAO.updateBalanceChurch(req.getChurch().getId(),totalAmount);
+        boolean isUpdateBalanceChurch = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),totalAmount);
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After update current_balance=",isUpdateBalanceChurch);
-
 
         resultData.setTransactionId(transactionId);
         resultData.setMessage(TransactionConstant.MESSAGE_SUCCESS);

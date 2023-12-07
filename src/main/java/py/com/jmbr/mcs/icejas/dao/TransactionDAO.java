@@ -6,10 +6,10 @@ import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
 import java.math.BigDecimal;
 
 public interface TransactionDAO {
-    Integer addTransaction(Transaction transaction);
+    Integer addTransaction(Transaction transaction, Integer churchId,Integer transactionType,Integer userId);
 
 
-    Boolean addBalanceHistory(Integer churchId, BigDecimal amount,Integer transactionId,BigDecimal previousAmount);
+    Boolean addBalanceHistory(String logId,Integer churchId, BigDecimal amount,Integer transactionId,BigDecimal previousAmount);
 
-    Boolean updateBalanceChurch(Integer churchId, BigDecimal amount);
+    Boolean updateBalanceChurch(String logId,Integer churchId, BigDecimal amount);
 }
