@@ -1,5 +1,7 @@
 # mcs.icejas
-Microservicio que maneja el flujo de ingresos y egresos del iglesias ICEJAS
+Microservicio que maneja el flujo de ingresos y egresos del iglesias ICEJAS.
+
+Ademas provee un historial de saldos para un mejor control de los  movimientos.
 
 # Tecnologias utilizadas
 Lenguaje: ```Java```
@@ -14,7 +16,8 @@ Docker: ```Docker file para crear imagen ```
 
 Documentacion:```Swagger-ui para documentar los enpoint ```
 
-
+# Estructura de las tablas 
+![Estructura Base datos](docs/icjeas-db.png.png)
 
 # Flujo con los mcs y apis relacionados
 ![Flujo mcs relacionados](docs/icejas.png)
@@ -28,6 +31,6 @@ Documentacion:```Swagger-ui para documentar los enpoint ```
 
 3- Ejcutar el comando ```mvn clean install``` en ambos proyectos para descargar las dependencias
 
-4- Tener configurado una base de datos ```postgres``` y adaptar la cadena de conexion del archivo ```application.yml``` del proyecto ```mcs.auth```
+4- Tener configurado una base de datos ```postgres``` y adaptar la cadena de conexion del archivo ```application.yml``` del proyecto ```mcs.icejas```
 
-5- Ejecutar el comando ```java -jar mcs.auth.jar```
+5- Ejecutar el comando ```java -jar mcs.icejas.jar```
