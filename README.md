@@ -17,7 +17,7 @@ Docker: ```Docker file para crear imagen ```
 Documentacion:```Swagger-ui para documentar los enpoint ```
 
 # Estructura de las tablas 
-![Estructura Base datos](docs/icjeas-db.png.png)
+![Estructura Base datos](docs/icjeas-db.png)
 
 # Flujo con los mcs y apis relacionados
 ![Flujo mcs relacionados](docs/icejas.png)
