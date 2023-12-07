@@ -5,12 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
+import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostReq;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostRes;
 import py.com.jmbr.java.commons.logger.RequestUtil;
+import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
@@ -20,21 +23,37 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public TransactionPostResData addTransactions(TransactionPostReq req) {
         TransactionPostResData result = new TransactionPostResData();
+        TransactionPostRes resultData = new TransactionPostRes();
+        Transaction transaction = req.getTransaction();
         String logId = RequestUtil.getLogId();
+        
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Starting add transaction",req);
 
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add transaction ",req.getTransaction());
-        Integer transactionId = transactionDAO.addTransaction(req.getTransaction());
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add transaction ",transaction);
+        Integer transactionId = transactionDAO.addTransaction(transaction);
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add transaction id= ",transactionId);
-
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before get current amount churchId=",req.getTransaction().getChurchId());
-        BigDecimal currentAmount = transactionDAO.getCurrentAmount(req.getTransaction().getChurchId());
+         
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before get current amount churchId=",transaction.getChurchId());
+        BigDecimal currentAmount = transactionDAO.getCurrentAmount(transaction.getChurchId());
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After get current amount =",currentAmount);
 
+        BigDecimal totalAmount = currentAmount;
+        BigDecimal previousAmount = currentAmount;
+        if(transaction.getTransactionType().getCategory().equals("D"))
+            totalAmount.subtract(transaction.getAmount());
+        else
+            totalAmount.add(transaction.getAmount());
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add balance_history totalAmount =",totalAmount);
+        boolean isBalanceHistoryInserted= transactionDAO.addBalanceHistory(transaction.getChurchId(),totalAmount,transactionId,previousAmount);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add balance_history result=",isBalanceHistoryInserted);
 
-        boolean isInsertedBalanceHistory =  transactionDAO.addBalanceHistory(req.getTransaction().getChurchId(),req.getTransaction().getAmount(),transactionId,currentAmount);
+        //TODO agregar tambien el saldo en chcurch
 
 
-        return null;
+        resultData.setTransactionId(transactionId);
+        resultData.setMessage(TransactionConstant.MESSAGE_SUCCESS);
+        resultData.setStatus(TransactionConstant.STATUS_OK);
+
+        return result;
     }
 }

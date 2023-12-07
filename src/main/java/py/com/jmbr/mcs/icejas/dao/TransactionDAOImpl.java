@@ -22,4 +22,9 @@ public class TransactionDAOImpl implements TransactionDAO{
     public Boolean addBalanceHistory(Integer churchId, BigDecimal amount, Integer transactionId,BigDecimal previousAmount) {
         return null;
     }
+
+    @Override
+    public Boolean updateBalanceChurch(Integer churchId, BigDecimal amount) {
+        return null;
+    }
 }

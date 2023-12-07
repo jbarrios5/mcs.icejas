@@ -11,4 +11,6 @@ public interface TransactionDAO {
     BigDecimal getCurrentAmount(Integer churchId);
 
     Boolean addBalanceHistory(Integer churchId, BigDecimal amount,Integer transactionId,BigDecimal previousAmount);
+
+    Boolean updateBalanceChurch(Integer churchId, BigDecimal amount);
 }
