@@ -10,14 +10,16 @@ import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
 import py.com.jmbr.java.commons.context.SecurityAccess;
 import py.com.jmbr.mcs.icejas.service.TransactionService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "transactions/${version}")
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
     @PostMapping(value = "/")
-    @SecurityAccess()
-    public TransactionPostResData addTransactions(@RequestBody TransactionPostReqData req){
+//    @SecurityAccess()
+    public TransactionPostResData addTransactions(@RequestBody @Valid TransactionPostReqData req){
         return transactionService.addTransactions(req.getData());
     }
 
