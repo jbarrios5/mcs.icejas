@@ -25,6 +25,7 @@ public class TransactionServiceImpl implements TransactionService{
         TransactionPostResData result = new TransactionPostResData();
         TransactionPostRes resultData = new TransactionPostRes();
         Transaction transaction = req.getTransaction();
+
         String logId = RequestUtil.getLogId();
         
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Starting add transaction",req);
@@ -33,21 +34,22 @@ public class TransactionServiceImpl implements TransactionService{
         Integer transactionId = transactionDAO.addTransaction(transaction);
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add transaction id= ",transactionId);
          
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before get current amount churchId=",transaction.getChurchId());
-        BigDecimal currentAmount = transactionDAO.getCurrentAmount(transaction.getChurchId());
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After get current amount =",currentAmount);
+        BigDecimal currentAmount = req.getChurch().getCurrentBalance();
 
         BigDecimal totalAmount = currentAmount;
         BigDecimal previousAmount = currentAmount;
-        if(transaction.getTransactionType().getCategory().equals("D"))
+        if(req.getTransactionType().getCategory().equals(TransactionConstant.TRANSACTION_DEBIT))
             totalAmount.subtract(transaction.getAmount());
         else
             totalAmount.add(transaction.getAmount());
+
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add balance_history totalAmount =",totalAmount);
-        boolean isBalanceHistoryInserted= transactionDAO.addBalanceHistory(transaction.getChurchId(),totalAmount,transactionId,previousAmount);
+        boolean isBalanceHistoryInserted= transactionDAO.addBalanceHistory(req.getChurch().getId(),totalAmount,transactionId,previousAmount);
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add balance_history result=",isBalanceHistoryInserted);
 
-        //TODO agregar tambien el saldo en chcurch
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before update current_balance=",null);
+        boolean isUpdateBalanceChurch = transactionDAO.updateBalanceChurch(req.getChurch().getId(),totalAmount);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After update current_balance=",isUpdateBalanceChurch);
 
 
         resultData.setTransactionId(transactionId);

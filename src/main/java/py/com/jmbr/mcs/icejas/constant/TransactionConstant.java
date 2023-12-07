@@ -5,4 +5,6 @@ public class TransactionConstant {
 
     public static final int STATUS_OK = 1;
     public static final String MESSAGE_SUCCESS = "Movimiento registrado exitosamente!";
+    public static final String TRANSACTION_DEBIT = "D";
+
 }

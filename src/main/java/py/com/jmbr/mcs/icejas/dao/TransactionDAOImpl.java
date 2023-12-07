@@ -13,10 +13,7 @@ public class TransactionDAOImpl implements TransactionDAO{
         return 1;
     }
 
-    @Override
-    public BigDecimal getCurrentAmount(Integer churchId){
-        return null;
-    }
+
 
     @Override
     public Boolean addBalanceHistory(Integer churchId, BigDecimal amount, Integer transactionId,BigDecimal previousAmount) {

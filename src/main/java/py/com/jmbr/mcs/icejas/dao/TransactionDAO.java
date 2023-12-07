@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 public interface TransactionDAO {
     Integer addTransaction(Transaction transaction);
 
-    BigDecimal getCurrentAmount(Integer churchId);
 
     Boolean addBalanceHistory(Integer churchId, BigDecimal amount,Integer transactionId,BigDecimal previousAmount);
 
