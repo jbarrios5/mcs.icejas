@@ -5,16 +5,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
+import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesGetResData;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostReq;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostRes;
+import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionType;
+import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionTypesGetRes;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
@@ -65,5 +69,21 @@ public class TransactionServiceImpl implements TransactionService{
         Church church =  transactionDAO.getChurch(logId,churchId);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getChurch:After get church",church);
         return church;
+    }
+
+    @Override
+    public TransactionTypesGetResData getTransactionTypes() {
+        String logId = RequestUtil.getLogId();
+        TransactionTypesGetResData result = new TransactionTypesGetResData();
+        TransactionTypesGetRes resultData = new TransactionTypesGetRes();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Starting get transactions types",null);
+        List<TransactionType> transactionTypeList = transactionDAO.getTransactionsType(logId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:After get transactions types",transactionTypeList);
+
+        resultData.setTransactionTypes(transactionTypeList);
+        result.setData(resultData);
+        return result;
+
+
     }
 }
