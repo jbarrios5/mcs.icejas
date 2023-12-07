@@ -10,17 +10,21 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostRes;
 import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
+import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TransactionDAOImpl implements TransactionDAO {
@@ -45,7 +49,7 @@ public class TransactionDAOImpl implements TransactionDAO {
             }
         }, keyHolder);
 
-        return keyHolder.getKey().intValue();
+        return getTransactionId(keyHolder);
     }
     @Override
     public Boolean addBalanceHistory(String logId,Integer churchId, BigDecimal amount, Integer transactionId,BigDecimal previousAmount) {
@@ -71,5 +75,26 @@ public class TransactionDAOImpl implements TransactionDAO {
             throw new JMBRException("Ocurrio un error al insertar saldos en church", JMBRExceptionType.FALTAL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return result > 0;
+    }
+
+    @Override
+    public Church getChurch(String logId,Integer churchId) {
+        try {
+            return jdbcPGS.queryForObject(SQLQueries.GET_CHURCH,new Object []{churchId},new ChurchMapper());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getChurch:Error getting church",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener los detalles de la iglesia.", JMBRExceptionType.FALTAL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private Integer getTransactionId(KeyHolder keyHolder) {
+        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+
+        Map<String, Object> keyMap = keyList.get(0);
+
+        // Asumiendo que la columna que contiene la clave generada se llama "ID"
+        Object idValue = keyMap.get("id");
+
+        return ((Number) idValue).intValue();
     }
 }

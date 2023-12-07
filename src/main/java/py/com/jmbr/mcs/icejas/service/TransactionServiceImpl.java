@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
+import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostReq;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostRes;
@@ -38,9 +39,9 @@ public class TransactionServiceImpl implements TransactionService{
         BigDecimal totalAmount = currentAmount;
         BigDecimal previousAmount = currentAmount;
         if(req.getTransactionType().getCategory().equals(TransactionConstant.TRANSACTION_DEBIT))
-            totalAmount.subtract(transaction.getAmount());
+            totalAmount = totalAmount.subtract(transaction.getAmount());
         else
-            totalAmount.add(transaction.getAmount());
+            totalAmount = totalAmount.add(transaction.getAmount());
 
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add balance_history totalAmount =",totalAmount);
         boolean isBalanceHistoryInserted= transactionDAO.addBalanceHistory(logId,req.getChurch().getId(),totalAmount,transactionId,previousAmount);
@@ -53,7 +54,16 @@ public class TransactionServiceImpl implements TransactionService{
         resultData.setTransactionId(transactionId);
         resultData.setMessage(TransactionConstant.MESSAGE_SUCCESS);
         resultData.setStatus(TransactionConstant.STATUS_OK);
-
+        result.setData(resultData);
         return result;
+    }
+
+    @Override
+    public Church getChurch(Integer churchId) {
+        String logId = RequestUtil.getLogId();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getChurch:Starting get church",churchId);
+        Church church =  transactionDAO.getChurch(logId,churchId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getChurch:After get church",church);
+        return church;
     }
 }

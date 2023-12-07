@@ -1,5 +1,6 @@
 package py.com.jmbr.mcs.icejas.dao;
 
+import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
 
 
@@ -10,6 +11,8 @@ public interface TransactionDAO {
 
 
     Boolean addBalanceHistory(String logId,Integer churchId, BigDecimal amount,Integer transactionId,BigDecimal previousAmount);
+
+    Church getChurch(String logId,Integer churchId);
 
     Boolean updateBalanceChurch(String logId,Integer churchId, BigDecimal amount);
 }
