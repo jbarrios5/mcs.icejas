@@ -18,6 +18,7 @@ import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
+import py.com.jmbr.mcs.icejas.mapper.TransactionTypeMapper;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
