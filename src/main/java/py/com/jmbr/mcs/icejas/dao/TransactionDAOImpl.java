@@ -18,15 +18,12 @@ import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
-import py.com.jmbr.mcs.icejas.mapper.TransactionTypesMapper;
 
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,12 +89,12 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     @Override
-    public List<TransactionType> getTransactionsType(String logId) {
+    public List<TransactionType> getTransactionTypes(String logId) {
         try {
-            return jdbcPGS.query(SQLQueries.GET_TRANSACTION_TYPES,new TransactionTypesMapper());
+            return jdbcPGS.query(SQLQueries.GET_TRANSACTIONS_TYPES,new TransactionTypeMapper());
         }catch (DataAccessException e){
-            logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionsType:Error getting TransactionsType",e.getMessage());
-            throw new JMBRException("Ocurrio un error al obtener los tipos de transaction.", JMBRExceptionType.FALTAL, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Error getting church",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener los tipos de transacciones",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

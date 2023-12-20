@@ -18,7 +18,6 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
     @PostMapping(value = "/")
-    @Operation(summary = "add transactions ",description = "Add transaction  ")
     public TransactionPostResData addTransactions(@RequestBody @Valid TransactionPostReqData req){
         return transactionService.addTransactions(req.getData());
     }

@@ -6,12 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesGetResData;
-import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
-import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostReq;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostRes;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionType;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionTypesGetRes;
+import py.com.jmbr.java.commons.domain.mcs.icejas.*;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
@@ -75,15 +70,14 @@ public class TransactionServiceImpl implements TransactionService{
     public TransactionTypesGetResData getTransactionTypes() {
         String logId = RequestUtil.getLogId();
         TransactionTypesGetResData result = new TransactionTypesGetResData();
-        TransactionTypesGetRes resultData = new TransactionTypesGetRes();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Starting get transactions types",null);
-        List<TransactionType> transactionTypeList = transactionDAO.getTransactionsType(logId);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:After get transactions types",transactionTypeList);
+        TransactionTypesGetRes data = new TransactionTypesGetRes();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Starting get transcationTypes",null);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Before get transcationTypes",null);
+        List<TransactionType> transactionTypes = transactionDAO.getTransactionTypes(logId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:After get transcationTypes",transactionTypes.size());
 
-        resultData.setTransactionTypes(transactionTypeList);
-        result.setData(resultData);
+        data.setTransactionTypes(transactionTypes);
+        result.setData(data);
         return result;
-
-
     }
 }

@@ -8,5 +8,5 @@ public class SQLQueries {
     public static final String UPDATE_BALANCE_CHURCH = "UPDATE church set current_balance = ? WHERE id = ?";
     public static final String GET_CHURCH = "SELECT id,name,current_balance,created FROM church  WHERE id = ?";
 
-    public static final String GET_TRANSACTION_TYPES = "SELECT id,name ,category,created FROM transaction_type ";
+    public static final String GET_TRANSACTIONS_TYPES = "SELECT id,name,category,created FROM transaction_type";
 }
