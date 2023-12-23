@@ -21,10 +21,7 @@ import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionTypeMapper;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +44,7 @@ public class TransactionDAOImpl implements TransactionDAO {
                 ps.setBigDecimal(3, transaction.getAmount());
                 ps.setInt(4, churchId);
                 ps.setString(5, transaction.getDetails());
+                ps.setDate(6, transaction.getRegisterDate());
                 return ps;
             }
         }, keyHolder);
