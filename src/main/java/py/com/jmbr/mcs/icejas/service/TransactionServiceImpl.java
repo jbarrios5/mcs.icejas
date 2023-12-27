@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionDetailGetResData;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesGetResData;
 import py.com.jmbr.java.commons.domain.mcs.icejas.*;
@@ -78,6 +79,21 @@ public class TransactionServiceImpl implements TransactionService{
 
         data.setTransactionTypes(transactionTypes);
         result.setData(data);
+        return result;
+    }
+
+    @Override
+    public TransactionDetailGetResData getTransactionDetails(Integer churchId) {
+        String logId = RequestUtil.getLogId();
+        TransactionDetailGetResData result = new TransactionDetailGetResData();
+        TransactionDetailGetRes data = new TransactionDetailGetRes();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Starting GET transaction details",null);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Before get all transaction details churchId=",churchId);
+        List<TransactionDetails> details = transactionDAO.getTransactionDetails(churchId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.toString());
+        data.setDetails(details);
+        result.setData(data);
+
         return result;
     }
 }

@@ -10,10 +10,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
-import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionPostRes;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionType;
+import py.com.jmbr.java.commons.domain.mcs.icejas.*;
 import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
@@ -95,6 +92,11 @@ public class TransactionDAOImpl implements TransactionDAO {
             logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Error getting church",e.getMessage());
             throw new JMBRException("Ocurrio un error al obtener los tipos de transacciones",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public List<TransactionDetails> getTransactionDetails(Integer churchId) {
+        return null;
     }
 
     private Integer getTransactionId(KeyHolder keyHolder) {

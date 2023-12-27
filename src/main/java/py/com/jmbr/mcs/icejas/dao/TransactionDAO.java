@@ -2,6 +2,7 @@ package py.com.jmbr.mcs.icejas.dao;
 
 import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
+import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionDetails;
 import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionType;
 
 
@@ -19,4 +20,5 @@ public interface TransactionDAO {
     Boolean updateBalanceChurch(String logId,Integer churchId, BigDecimal amount);
 
     List<TransactionType> getTransactionTypes(String logId);
+    List<TransactionDetails> getTransactionDetails(Integer churchId);
 }

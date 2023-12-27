@@ -1,5 +1,6 @@
 package py.com.jmbr.mcs.icejas.service;
 
+import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionDetailGetResData;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesGetResData;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
@@ -11,4 +12,6 @@ public interface TransactionService {
     Church getChurch(Integer churchId);
 
     TransactionTypesGetResData getTransactionTypes();
+
+    TransactionDetailGetResData getTransactionDetails(Integer churchId);
 }
