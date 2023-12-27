@@ -89,7 +89,7 @@ public class TransactionServiceImpl implements TransactionService{
         TransactionDetailGetRes data = new TransactionDetailGetRes();
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Starting GET transaction details",null);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Before get all transaction details churchId=",churchId);
-        List<TransactionDetails> details = transactionDAO.getTransactionDetails(churchId);
+        List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.toString());
         data.setDetails(details);
         result.setData(data);

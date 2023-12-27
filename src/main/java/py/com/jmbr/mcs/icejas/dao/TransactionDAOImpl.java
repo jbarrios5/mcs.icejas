@@ -15,6 +15,7 @@ import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
+import py.com.jmbr.mcs.icejas.mapper.TransactionDetailMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionTypeMapper;
 
 import java.math.BigDecimal;
@@ -95,8 +96,13 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     @Override
-    public List<TransactionDetails> getTransactionDetails(Integer churchId) {
-        return null;
+    public List<TransactionDetails> getTransactionDetails(String logId,Integer churchId) {
+        try {
+            return jdbcPGS.query(SQLQueries.GET_TRANSACTION_DETAILS, new Object[]{churchId},new TransactionDetailMapper());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Error getting church",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener las transacciones",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private Integer getTransactionId(KeyHolder keyHolder) {
