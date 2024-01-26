@@ -105,6 +105,18 @@ public class TransactionDAOImpl implements TransactionDAO {
         }
     }
 
+    @Override
+    public Boolean addTransactionType(String logId,TransactionType transactionType) {
+        int result = 0;
+        try {
+            result = jdbcPGS.update(SQLQueries.ADD_TRANSACTION_TYPE, transactionType.getDescription(),transactionType.getCategory());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Error ",e.getMessage());
+            throw new JMBRException("Ocurrio un error al insertar el tipo de transaction",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (result > 0 );
+    }
+
     private Integer getTransactionId(KeyHolder keyHolder) {
         List<Map<String, Object>> keyList = keyHolder.getKeyList();
 

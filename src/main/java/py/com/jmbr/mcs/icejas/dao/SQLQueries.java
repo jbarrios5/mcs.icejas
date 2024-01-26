@@ -15,4 +15,6 @@ public class SQLQueries {
             " join  balance_history bh on bh.id  = tr.id " +
             " where tr.church_id = ? order by tr.id ASC";
     public static final String GET_TRANSACTIONS_TYPES = "SELECT id,name,category,created FROM transaction_type";
+
+    public static final String ADD_TRANSACTION_TYPE = "INSET INTO transaction_type values(?,?)";
 }

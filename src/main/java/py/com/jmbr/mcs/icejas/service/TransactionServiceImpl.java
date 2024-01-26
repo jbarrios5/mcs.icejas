@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionDetailGetResData;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
 import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesGetResData;
+import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesPostRestData;
 import py.com.jmbr.java.commons.domain.mcs.icejas.*;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
@@ -94,6 +95,21 @@ public class TransactionServiceImpl implements TransactionService{
         data.setDetails(details);
         result.setData(data);
 
+        return result;
+    }
+
+    @Override
+    public TransactionTypesPostRestData addTransactionType(TransactionType transactionType) {
+        String logId = RequestUtil.getLogId();
+        TransactionTypesPostRestData result = new TransactionTypesPostRestData();
+        TransactionTypesPostRes data  = new TransactionTypesPostRes();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Starting POST transaction type",null);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Before add transaction type",transactionType.toString());
+        Boolean isInserted = transactionDAO.addTransactionType(logId,transactionType);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
+
+        data.setIsInserted(isInserted);
+        result.setData(data);
         return result;
     }
 }

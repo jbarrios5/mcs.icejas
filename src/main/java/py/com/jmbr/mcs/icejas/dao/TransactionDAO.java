@@ -21,4 +21,6 @@ public interface TransactionDAO {
 
     List<TransactionType> getTransactionTypes(String logId);
     List<TransactionDetails> getTransactionDetails(String logId,Integer churchId);
+
+    Boolean addTransactionType(String logId,TransactionType transactionType) ;
 }
