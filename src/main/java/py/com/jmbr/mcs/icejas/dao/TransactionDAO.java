@@ -7,6 +7,7 @@ import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionType;
 
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.List;
 
 public interface TransactionDAO {
@@ -23,4 +24,6 @@ public interface TransactionDAO {
     List<TransactionDetails> getTransactionDetails(String logId,Integer churchId);
 
     Boolean addTransactionType(String logId,TransactionType transactionType) ;
+
+    Boolean addCloseMonth(Integer userId, Date closeMonth);
 }

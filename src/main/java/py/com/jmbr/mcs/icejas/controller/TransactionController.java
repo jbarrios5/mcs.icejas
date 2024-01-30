@@ -9,6 +9,7 @@ import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionType;
 import py.com.jmbr.mcs.icejas.service.TransactionService;
 
 import javax.validation.Valid;
+import java.sql.Date;
 
 @RestController
 @RequestMapping(value = "transactions/${version}")
@@ -42,4 +43,22 @@ public class TransactionController {
     public TransactionTypesPostRestData addTransactionType(@RequestBody TransactionType transactionType){
         return transactionService.addTransactionType(transactionType);
     }
+
+    @PostMapping("/closed")
+    @Operation(summary = "closed month",description = "Close balance of the current month ")
+    public TransactionMonthClosedPostResData closedMonth(
+            @RequestParam(value = "userId",required = true) Integer userId,
+            @RequestParam(value = "month",required = true)Date closedDate
+            ){
+        return transactionService.closedMonth(userId,closedDate);
+    }
+
+    @GetMapping("/report")
+    public TransactionReportGetResData getReportMonth(
+    ){
+
+    }
+
+
+
 }

@@ -117,6 +117,17 @@ public class TransactionDAOImpl implements TransactionDAO {
         return (result > 0 );
     }
 
+    @Override
+    public Boolean addCloseMonth(Integer userId, Date closeMonth) {
+        int result = 0;
+        try {
+            result = jdbcPGS.update(SQLQueries.ADD_CLOSED_MONTH, userId,closeMonth);
+        }catch (DataAccessException e){
+            throw new JMBRException("Ocurrio un error al insertar el tipo de transaction",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (result > 0 );
+    }
+
     private Integer getTransactionId(KeyHolder keyHolder) {
         List<Map<String, Object>> keyList = keyHolder.getKeyList();
 

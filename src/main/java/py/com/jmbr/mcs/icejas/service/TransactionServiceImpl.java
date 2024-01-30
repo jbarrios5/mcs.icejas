@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionDetailGetResData;
-import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
-import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesGetResData;
-import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesPostRestData;
+import py.com.jmbr.java.commons.beans.mcs.icejas.*;
 import py.com.jmbr.java.commons.domain.mcs.icejas.*;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
@@ -15,6 +12,7 @@ import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -111,5 +109,10 @@ public class TransactionServiceImpl implements TransactionService{
         data.setIsInserted(isInserted);
         result.setData(data);
         return result;
+    }
+
+    @Override
+    public TransactionMonthClosedPostResData closedMonth(Integer userId, Date closedDate) {
+        return null;
     }
 }
