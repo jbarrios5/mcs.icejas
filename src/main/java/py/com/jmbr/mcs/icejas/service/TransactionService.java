@@ -19,4 +19,6 @@ public interface TransactionService {
     TransactionTypesPostRestData addTransactionType(TransactionType transactionType);
 
     TransactionMonthClosedPostResData closedMonth(Integer userId, Date closedDate);
+
+    TransactionReportGetResData getReportMonth(Integer churchId);
 }

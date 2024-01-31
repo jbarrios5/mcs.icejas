@@ -1,9 +1,6 @@
 package py.com.jmbr.mcs.icejas.dao;
 
-import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
-import py.com.jmbr.java.commons.domain.mcs.icejas.Transaction;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionDetails;
-import py.com.jmbr.java.commons.domain.mcs.icejas.TransactionType;
+import py.com.jmbr.java.commons.domain.mcs.icejas.*;
 
 
 import java.math.BigDecimal;
@@ -26,4 +23,7 @@ public interface TransactionDAO {
     Boolean addTransactionType(String logId,TransactionType transactionType) ;
 
     Boolean addCloseMonth(Integer userId, Date closeMonth);
+    List<TransactionReportGetRes> getReportMonth(Integer churchId,String logId);
+
+
 }

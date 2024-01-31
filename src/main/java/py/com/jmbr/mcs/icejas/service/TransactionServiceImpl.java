@@ -3,9 +3,12 @@ package py.com.jmbr.mcs.icejas.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import py.com.jmbr.java.commons.beans.mcs.icejas.*;
 import py.com.jmbr.java.commons.domain.mcs.icejas.*;
+import py.com.jmbr.java.commons.exception.JMBRException;
+import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
@@ -114,5 +117,20 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public TransactionMonthClosedPostResData closedMonth(Integer userId, Date closedDate) {
         return null;
+    }
+
+    @Override
+    public TransactionReportGetResData getReportMonth(Integer churchId) {
+        String logId = RequestUtil.getLogId();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Starting GET transaction report",null);
+        TransactionReportGetResData result = new TransactionReportGetResData();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Before get transaction report",null);
+        List<TransactionReportGetRes> transactionsReport = transactionDAO.getReportMonth(churchId,logId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:After get transaction report with result=",transactionsReport.size());
+        if(transactionsReport.isEmpty())
+            throw new JMBRException("No se obtuvo ningun movimiento", JMBRExceptionType.WARNING, HttpStatus.BAD_REQUEST);
+
+        result.setData(transactionsReport);
+        return result;
     }
 }

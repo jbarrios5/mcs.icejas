@@ -54,9 +54,11 @@ public class TransactionController {
     }
 
     @GetMapping("/report")
+    @Operation(summary = "report balances",description = "Report balances every month ")
     public TransactionReportGetResData getReportMonth(
-    ){
-
+            @RequestParam(value = "churchId",required = true) Integer churchId
+            ){
+        return transactionService.getReportMonth(churchId);
     }
 
 

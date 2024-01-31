@@ -16,6 +16,7 @@ import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionDetailMapper;
+import py.com.jmbr.mcs.icejas.mapper.TransactionReportMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionTypeMapper;
 
 import java.math.BigDecimal;
@@ -126,6 +127,17 @@ public class TransactionDAOImpl implements TransactionDAO {
             throw new JMBRException("Ocurrio un error al insertar el tipo de transaction",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return (result > 0 );
+    }
+
+    @Override
+    public List<TransactionReportGetRes> getReportMonth(Integer churchId,String logId) {
+        try {
+            return jdbcPGS.query(SQLQueries.GET_BALANCE_MONTH, new Object[]{churchId},new TransactionReportMapper());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Error getting church",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener los reportes",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     private Integer getTransactionId(KeyHolder keyHolder) {
