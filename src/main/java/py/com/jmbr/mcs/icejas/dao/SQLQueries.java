@@ -13,7 +13,7 @@ public class SQLQueries {
             " from transactions tr " +
             " join transaction_type ty on ty.id = tr.transaction_type_id" +
             " join  balance_history bh on bh.id  = tr.id " +
-            " where tr.church_id = ? order by tr.id ASC";
+            " where tr.church_id = ? order by tr.id DESC";
     public static final String GET_TRANSACTIONS_TYPES = "SELECT id,name,category,created FROM transaction_type";
 
     public static final String ADD_TRANSACTION_TYPE = "INSERT INTO transaction_type (name,category)values(?,?)";
