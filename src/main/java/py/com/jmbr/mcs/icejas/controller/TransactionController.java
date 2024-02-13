@@ -23,9 +23,15 @@ public class TransactionController {
 
     @GetMapping("/")
     @Operation(summary = "get transactions ",description = "Get all transactions that belongs a church ")
-    public TransactionDetailGetResData getTransactions(@RequestParam(value = "church_id",required = true)Integer churchId){
+    public TransactionDetailGetResData getTransactions(
+            @RequestParam(value = "churchId",required = true)Integer churchId,
+            @RequestParam(value = "startDate",required = false)Date startDate,
+            @RequestParam(value = "endDate",required = false)Date endDate,
+            @RequestParam(value = "activiteType",required = false)Integer activiteType,
+            @RequestParam(value = "transactionType",required = false)String transactionType
+            ){
 
-        return transactionService.getTransactionDetails(churchId);
+        return transactionService.getTransactionDetails(churchId,startDate,endDate,activiteType,transactionType);
     }
     @GetMapping("/types")
     @Operation(summary = "get transactions types",description = "Get all transactions types ")

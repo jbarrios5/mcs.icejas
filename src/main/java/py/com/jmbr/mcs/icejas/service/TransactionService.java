@@ -14,7 +14,7 @@ public interface TransactionService {
 
     TransactionTypesGetResData getTransactionTypes();
 
-    TransactionDetailGetResData getTransactionDetails(Integer churchId);
+    TransactionDetailGetResData getTransactionDetails(Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType);
 
     TransactionTypesPostRestData addTransactionType(TransactionType transactionType);
 

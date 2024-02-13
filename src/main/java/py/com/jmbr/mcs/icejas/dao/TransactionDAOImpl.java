@@ -1,5 +1,6 @@
 package py.com.jmbr.mcs.icejas.dao;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,9 +98,10 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     @Override
-    public List<TransactionDetails> getTransactionDetails(String logId,Integer churchId) {
+    public List<TransactionDetails> getTransactionDetails(String logId,Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType) {
+        String query = buildGetTransactionDetailQuery(churchId,startDate,endDate,activiteType,transactionType);
         try {
-            return jdbcPGS.query(SQLQueries.GET_TRANSACTION_DETAILS, new Object[]{churchId},new TransactionDetailMapper());
+            return jdbcPGS.query(query,new TransactionDetailMapper());
         }catch (DataAccessException e){
             logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Error getting church",e.getMessage());
             throw new JMBRException("Ocurrio un error al obtener las transacciones",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -149,5 +151,24 @@ public class TransactionDAOImpl implements TransactionDAO {
         Object idValue = keyMap.get("id");
 
         return ((Number) idValue).intValue();
+    }
+
+    private String buildGetTransactionDetailQuery(Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType){
+        StringBuilder query  = new StringBuilder();
+        query.append(SQLQueries.GET_TRANSACTION_DETAILS);
+        query.append( " where tr.church_id = "+churchId.toString()) ;
+
+        if(startDate !=null)
+            query.append(" AND tr.registered_date >= "+startDate);
+        if(endDate != null)
+            query.append(" AND tr.registered_date <= "+endDate);
+        if(activiteType != null)
+            query.append(" AND ty.id = "+activiteType);
+        if(StringUtils.isNotBlank(transactionType))
+            query.append(" AND ty.category = "+transactionType);
+
+        query.append(" order by tr.id DESC");
+
+        return query.toString();
     }
 }

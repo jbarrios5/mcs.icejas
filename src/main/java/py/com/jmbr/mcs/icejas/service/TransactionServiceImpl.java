@@ -85,13 +85,13 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public TransactionDetailGetResData getTransactionDetails(Integer churchId) {
+    public TransactionDetailGetResData getTransactionDetails(Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType) {
         String logId = RequestUtil.getLogId();
         TransactionDetailGetResData result = new TransactionDetailGetResData();
         TransactionDetailGetRes data = new TransactionDetailGetRes();
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Starting GET transaction details",null);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Before get all transaction details churchId=",churchId);
-        List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId);
+        List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId,startDate,endDate,activiteType,transactionType);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.toString());
         data.setDetails(details);
         result.setData(data);
