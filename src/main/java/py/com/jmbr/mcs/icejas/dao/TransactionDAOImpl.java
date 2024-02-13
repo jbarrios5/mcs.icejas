@@ -165,7 +165,7 @@ public class TransactionDAOImpl implements TransactionDAO {
         if(activiteType != null)
             query.append(" AND ty.id = "+activiteType);
         if(StringUtils.isNotBlank(transactionType))
-            query.append(" AND ty.category = "+transactionType);
+            query.append( String.format(" AND ty.category = '%s'",transactionType) );
 
         query.append(" order by tr.id DESC");
 
