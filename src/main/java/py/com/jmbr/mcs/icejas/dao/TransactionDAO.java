@@ -18,7 +18,7 @@ public interface TransactionDAO {
     Boolean updateBalanceChurch(String logId,Integer churchId, BigDecimal amount);
 
     List<TransactionType> getTransactionTypes(String logId);
-    List<TransactionDetails> getTransactionDetails(String logId,Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType);
+    List<TransactionDetails> getTransactionDetails(String logId,Integer churchId,String startDate,String endDate,Integer activiteType,String transactionType);
 
     Boolean addTransactionType(String logId,TransactionType transactionType) ;
 

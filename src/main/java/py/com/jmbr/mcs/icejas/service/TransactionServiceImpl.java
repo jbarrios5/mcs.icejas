@@ -1,5 +1,6 @@
 package py.com.jmbr.mcs.icejas.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -85,13 +88,14 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public TransactionDetailGetResData getTransactionDetails(Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType) {
+    public TransactionDetailGetResData getTransactionDetails(Integer churchId,String startDateStr,String endDateStr,Integer activiteType,String transactionType) {
         String logId = RequestUtil.getLogId();
         TransactionDetailGetResData result = new TransactionDetailGetResData();
         TransactionDetailGetRes data = new TransactionDetailGetRes();
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Starting GET transaction details",null);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Before get all transaction details churchId=",churchId);
-        List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId,startDate,endDate,activiteType,transactionType);
+
+        List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId,startDateStr,endDateStr,activiteType,transactionType);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.size());
         data.setDetails(details);
         result.setData(data);
@@ -133,4 +137,6 @@ public class TransactionServiceImpl implements TransactionService{
         result.setData(transactionsReport);
         return result;
     }
+
+
 }

@@ -2,6 +2,7 @@ package py.com.jmbr.mcs.icejas.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import py.com.jmbr.java.commons.beans.mcs.icejas.*;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
@@ -25,8 +26,8 @@ public class TransactionController {
     @Operation(summary = "get transactions ",description = "Get all transactions that belongs a church ")
     public TransactionDetailGetResData getTransactions(
             @RequestParam(value = "churchId",required = true)Integer churchId,
-            @RequestParam(value = "startDate",required = false)Date startDate,
-            @RequestParam(value = "endDate",required = false)Date endDate,
+            @RequestParam(value = "startDate",required = false) String startDate,
+            @RequestParam(value = "endDate",required = false) String endDate,
             @RequestParam(value = "activiteType",required = false)Integer activiteType,
             @RequestParam(value = "transactionType",required = false)String transactionType
             ){

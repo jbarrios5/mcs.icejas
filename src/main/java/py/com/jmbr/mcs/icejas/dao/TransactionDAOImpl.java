@@ -98,7 +98,7 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     @Override
-    public List<TransactionDetails> getTransactionDetails(String logId,Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType) {
+    public List<TransactionDetails> getTransactionDetails(String logId,Integer churchId,String startDate,String endDate,Integer activiteType,String transactionType) {
         String query = buildGetTransactionDetailQuery(churchId,startDate,endDate,activiteType,transactionType);
         try {
             return jdbcPGS.query(query,new TransactionDetailMapper());
@@ -153,15 +153,15 @@ public class TransactionDAOImpl implements TransactionDAO {
         return ((Number) idValue).intValue();
     }
 
-    private String buildGetTransactionDetailQuery(Integer churchId,Date startDate,Date endDate,Integer activiteType,String transactionType){
+    private String buildGetTransactionDetailQuery(Integer churchId,String startDate,String endDate,Integer activiteType,String transactionType){
         StringBuilder query  = new StringBuilder();
         query.append(SQLQueries.GET_TRANSACTION_DETAILS);
         query.append( " where tr.church_id = "+churchId.toString()) ;
 
-        if(startDate !=null)
-            query.append(" AND tr.registered_date >= "+startDate);
-        if(endDate != null)
-            query.append(" AND tr.registered_date <= "+endDate);
+        if(StringUtils.isNotBlank(startDate))
+            query.append(String.format(" AND tr.registered_date >= '%s'",startDate));
+        if(StringUtils.isNotBlank(endDate))
+            query.append(String.format(" AND tr.registered_date <= '%s'",endDate));
         if(activiteType != null)
             query.append(" AND ty.id = "+activiteType);
         if(StringUtils.isNotBlank(transactionType))
