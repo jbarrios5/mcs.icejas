@@ -22,6 +22,11 @@ public class TransactionController {
         return transactionService.addTransactions(req.getData());
     }
 
+    @PutMapping("/")
+    @Operation(summary = "udpate a transactions ",description = "udpate a transaction ")
+    public TransactionPutResData udpateTransactions(@RequestBody @Valid TransactionPostReqData req){
+        return transactionService.updateTransaction(req.getData());
+    }
     @GetMapping("/")
     @Operation(summary = "get transactions ",description = "Get all transactions that belongs a church ")
     public TransactionDetailGetResData getTransactions(

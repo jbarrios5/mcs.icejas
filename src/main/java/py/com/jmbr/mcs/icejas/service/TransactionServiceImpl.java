@@ -138,5 +138,11 @@ public class TransactionServiceImpl implements TransactionService{
         return result;
     }
 
+    @Override
+    public TransactionPutResData updateTransaction(TransactionPostReq req) {
+        String logId = RequestUtil.getLogId();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction report",null);
 
+        return null;
+    }
 }

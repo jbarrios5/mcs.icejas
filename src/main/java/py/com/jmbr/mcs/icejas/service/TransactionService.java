@@ -10,6 +10,7 @@ import java.sql.Date;
 public interface TransactionService {
     TransactionPostResData addTransactions(TransactionPostReq req);
 
+    TransactionPutResData updateTransaction(TransactionPostReq req);
     Church getChurch(Integer churchId);
 
     TransactionTypesGetResData getTransactionTypes();
