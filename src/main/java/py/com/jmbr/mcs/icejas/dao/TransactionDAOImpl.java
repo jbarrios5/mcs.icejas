@@ -1,5 +1,6 @@
 package py.com.jmbr.mcs.icejas.dao;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionDetailMapper;
+import py.com.jmbr.mcs.icejas.mapper.TransactionReportMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionTypeMapper;
 
 import java.math.BigDecimal;
@@ -96,13 +98,64 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     @Override
-    public List<TransactionDetails> getTransactionDetails(String logId,Integer churchId) {
+    public List<TransactionDetails> getTransactionDetails(String logId,Integer churchId,String startDate,String endDate,Integer activiteType,String transactionType) {
+        String query = buildGetTransactionDetailQuery(churchId,startDate,endDate,activiteType,transactionType);
         try {
-            return jdbcPGS.query(SQLQueries.GET_TRANSACTION_DETAILS, new Object[]{churchId},new TransactionDetailMapper());
+            return jdbcPGS.query(query,new TransactionDetailMapper());
         }catch (DataAccessException e){
             logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Error getting church",e.getMessage());
             throw new JMBRException("Ocurrio un error al obtener las transacciones",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public Boolean addTransactionType(String logId,TransactionType transactionType) {
+        int result = 0;
+        try {
+            result = jdbcPGS.update(SQLQueries.ADD_TRANSACTION_TYPE, transactionType.getDescription(),transactionType.getCategory());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Error ",e.getMessage());
+            throw new JMBRException("Ocurrio un error al insertar el tipo de transaction",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (result > 0 );
+    }
+
+    @Override
+    public Boolean addCloseMonth(Integer userId, Date closeMonth) {
+        int result = 0;
+        try {
+            result = jdbcPGS.update(SQLQueries.ADD_CLOSED_MONTH, userId,closeMonth);
+        }catch (DataAccessException e){
+            throw new JMBRException("Ocurrio un error al insertar el tipo de transaction",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (result > 0 );
+    }
+
+    @Override
+    public List<TransactionReportGetRes> getReportMonth(Integer churchId,String logId) {
+        try {
+            return jdbcPGS.query(SQLQueries.GET_BALANCE_MONTH, new Object[]{churchId},new TransactionReportMapper());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Error getting church",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener los reportes",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @Override
+    public Boolean updateTransaction(String logId, Transaction transaction, Integer transactionType) {
+        int result = 0;
+        try {
+            result = jdbcPGS.update(SQLQueries.UPDATE_TRANSACTION,
+                    transactionType,
+                    transaction.getAmount(),
+                    transaction.getRegisterDate(),
+                    transaction.getId());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Error getting transactions",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener las transacciones",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (result > 0);
     }
 
     private Integer getTransactionId(KeyHolder keyHolder) {
@@ -114,5 +167,24 @@ public class TransactionDAOImpl implements TransactionDAO {
         Object idValue = keyMap.get("id");
 
         return ((Number) idValue).intValue();
+    }
+
+    private String buildGetTransactionDetailQuery(Integer churchId,String startDate,String endDate,Integer activiteType,String transactionType){
+        StringBuilder query  = new StringBuilder();
+        query.append(SQLQueries.GET_TRANSACTION_DETAILS);
+        query.append( " where tr.church_id = "+churchId.toString()) ;
+
+        if(StringUtils.isNotBlank(startDate))
+            query.append(String.format(" AND tr.registered_date >= '%s'",startDate));
+        if(StringUtils.isNotBlank(endDate))
+            query.append(String.format(" AND tr.registered_date <= '%s'",endDate));
+        if(activiteType != null)
+            query.append(" AND ty.id = "+activiteType);
+        if(StringUtils.isNotBlank(transactionType))
+            query.append( String.format(" AND ty.category = '%s'",transactionType) );
+
+        query.append(" order by tr.id DESC");
+
+        return query.toString();
     }
 }

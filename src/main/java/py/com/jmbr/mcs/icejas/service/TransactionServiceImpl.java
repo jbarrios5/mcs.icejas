@@ -1,19 +1,24 @@
 package py.com.jmbr.mcs.icejas.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionDetailGetResData;
-import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionPostResData;
-import py.com.jmbr.java.commons.beans.mcs.icejas.TransactionTypesGetResData;
+import py.com.jmbr.java.commons.beans.mcs.icejas.*;
 import py.com.jmbr.java.commons.domain.mcs.icejas.*;
+import py.com.jmbr.java.commons.exception.JMBRException;
+import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -83,17 +88,67 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public TransactionDetailGetResData getTransactionDetails(Integer churchId) {
+    public TransactionDetailGetResData getTransactionDetails(Integer churchId,String startDateStr,String endDateStr,Integer activiteType,String transactionType) {
         String logId = RequestUtil.getLogId();
         TransactionDetailGetResData result = new TransactionDetailGetResData();
         TransactionDetailGetRes data = new TransactionDetailGetRes();
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Starting GET transaction details",null);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Before get all transaction details churchId=",churchId);
-        List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.toString());
+
+        List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId,startDateStr,endDateStr,activiteType,transactionType);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.size());
         data.setDetails(details);
         result.setData(data);
 
         return result;
+    }
+
+    @Override
+    public TransactionTypesPostRestData addTransactionType(TransactionType transactionType) {
+        String logId = RequestUtil.getLogId();
+        TransactionTypesPostRestData result = new TransactionTypesPostRestData();
+        TransactionTypesPostRes data  = new TransactionTypesPostRes();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Starting POST transaction type",null);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Before add transaction type",transactionType.toString());
+        Boolean isInserted = transactionDAO.addTransactionType(logId,transactionType);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
+
+        data.setIsInserted(isInserted);
+        result.setData(data);
+        return result;
+    }
+
+    @Override
+    public TransactionMonthClosedPostResData closedMonth(Integer userId, Date closedDate) {
+        return null;
+    }
+
+    @Override
+    public TransactionReportGetResData getReportMonth(Integer churchId) {
+        String logId = RequestUtil.getLogId();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Starting GET transaction report",null);
+        TransactionReportGetResData result = new TransactionReportGetResData();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Before get transaction report",null);
+        List<TransactionReportGetRes> transactionsReport = transactionDAO.getReportMonth(churchId,logId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:After get transaction report with result=",transactionsReport.size());
+        if(transactionsReport.isEmpty())
+            throw new JMBRException("No se obtuvo ningun movimiento", JMBRExceptionType.WARNING, HttpStatus.BAD_REQUEST);
+
+        result.setData(transactionsReport);
+        return result;
+    }
+
+    @Override
+    public TransactionPutResData updateTransaction(TransactionPostReq req) {
+        String logId = RequestUtil.getLogId();
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",false);
+        boolean isTransactionUpdated = transactionDAO.updateTransaction(logId,req.getTransaction(),req.getTransactionType().getId());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
+
+        //get new
+
+
+        return null;
     }
 }
