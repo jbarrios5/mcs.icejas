@@ -17,7 +17,6 @@ public class TransactionDetailMapper implements RowMapper<TransactionDetails> {
         transactionDetails.setTransactionCategory(rs.getString("category"));
         transactionDetails.setAmount(rs.getBigDecimal("amount"));
         transactionDetails.setRegisteredDate(rs.getDate("registered_date").toString());
-        transactionDetails.setCurrentBalance(rs.getBigDecimal("current_balance"));
         return transactionDetails;
     }
 }

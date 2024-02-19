@@ -9,10 +9,9 @@ public class SQLQueries {
     public static final String GET_CHURCH = "SELECT id,name,current_balance,created FROM church  WHERE id = ?";
 
     public static final String GET_TRANSACTION_DETAILS =
-            "select tr.registered_date ,tr.id  ,amount ,details ,user_id ,ty.name ,ty.category,bh.current_balance ,bh.previous_balance " +
+            "select tr.registered_date ,tr.id  ,amount ,details ,user_id ,ty.name ,ty.category "+
             " from transactions tr " +
-            " join transaction_type ty on ty.id = tr.transaction_type_id" +
-            " join  balance_history bh on bh.id  = tr.id " ;
+            " join transaction_type ty on ty.id = tr.transaction_type_id" ;
     public static final String GET_TRANSACTIONS_TYPES = "SELECT id,name,category,created FROM transaction_type";
 
     public static final String ADD_TRANSACTION_TYPE = "INSERT INTO transaction_type (name,category)values(?,?)";
