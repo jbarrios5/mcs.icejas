@@ -142,6 +142,22 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     }
 
+    @Override
+    public Boolean updateTransaction(String logId, Transaction transaction, Integer transactionType) {
+        int result = 0;
+        try {
+            result = jdbcPGS.update(SQLQueries.UPDATE_TRANSACTION,
+                    transactionType,
+                    transaction.getAmount(),
+                    transaction.getRegisterDate(),
+                    transaction.getId());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Error getting transactions",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener las transacciones",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (result > 0);
+    }
+
     private Integer getTransactionId(KeyHolder keyHolder) {
         List<Map<String, Object>> keyList = keyHolder.getKeyList();
 

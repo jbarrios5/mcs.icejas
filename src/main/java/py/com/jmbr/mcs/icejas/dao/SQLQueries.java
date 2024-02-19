@@ -21,6 +21,7 @@ public class SQLQueries {
             "    SUM(CASE when tp.category  = 'C' THEN amount ELSE 0 END) AS ingreso, " +
             "   EXTRACT(MONTH FROM t.registered_date) mes " +
             "    from transactions t join transaction_type tp on tp.id = t.transaction_type_id where  t.church_id = ? GROUP by EXTRACT(MONTH FROM t.registered_date) order by mes ASC";
+    public static final String UPDATE_TRANSACTION = "UPDATE transactions  SET transaction_type_id=? amount=? registered_date=? WHERE id = ?";
 
 
 }

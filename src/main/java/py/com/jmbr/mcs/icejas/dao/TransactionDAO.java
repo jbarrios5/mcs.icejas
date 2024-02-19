@@ -25,5 +25,6 @@ public interface TransactionDAO {
     Boolean addCloseMonth(Integer userId, Date closeMonth);
     List<TransactionReportGetRes> getReportMonth(Integer churchId,String logId);
 
+    Boolean updateTransaction(String logId,Transaction transaction,Integer transactionType);
 
 }

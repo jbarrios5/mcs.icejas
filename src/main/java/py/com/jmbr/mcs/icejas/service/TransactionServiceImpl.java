@@ -141,7 +141,13 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public TransactionPutResData updateTransaction(TransactionPostReq req) {
         String logId = RequestUtil.getLogId();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction report",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",false);
+        boolean isTransactionUpdated = transactionDAO.updateTransaction(logId,req.getTransaction(),req.getTransactionType().getId());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
+
+        //get new
+
 
         return null;
     }
