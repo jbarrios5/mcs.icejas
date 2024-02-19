@@ -42,20 +42,12 @@ public class TransactionServiceImpl implements TransactionService{
         BigDecimal currentAmount = req.getChurch().getCurrentBalance();
 
         BigDecimal totalAmount = currentAmount;
-        BigDecimal previousAmount = currentAmount;
         if(req.getTransactionType().getCategory().equals(TransactionConstant.TRANSACTION_DEBIT))
             totalAmount = totalAmount.subtract(transaction.getAmount());
         else
             totalAmount = totalAmount.add(transaction.getAmount());
 
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add balance_history totalAmount =",totalAmount);
-        boolean isBalanceHistoryInserted= transactionDAO.addBalanceHistory(logId,req.getChurch().getId(),totalAmount,transactionId,previousAmount);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add balance_history result=",isBalanceHistoryInserted);
-
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before update current_balance=",null);
-        boolean isUpdateBalanceChurch = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),totalAmount);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After update current_balance=",isUpdateBalanceChurch);
-
+        //TODO actualizar el monto en la nueva tabla
         resultData.setTransactionId(transactionId);
         resultData.setMessage(TransactionConstant.MESSAGE_SUCCESS);
         resultData.setStatus(TransactionConstant.STATUS_OK);
@@ -65,6 +57,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public Church getChurch(Integer churchId) {
+        //TODO eliminar current balance
         String logId = RequestUtil.getLogId();
         logger.info(RequestUtil.LOG_FORMATT,logId,"getChurch:Starting get church",churchId);
         Church church =  transactionDAO.getChurch(logId,churchId);
@@ -146,7 +139,7 @@ public class TransactionServiceImpl implements TransactionService{
         boolean isTransactionUpdated = transactionDAO.updateTransaction(logId,req.getTransaction(),req.getTransactionType().getId());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
 
-        //get new
+        //TODO obtener la suma de todo lo debito y credito y actualizar la tabla nueva
 
 
         return null;
