@@ -5,6 +5,6 @@ server:
     context-path: /@project.artifactId@
 datasource:
   pgs:
-    jdbcUrl: jdbc:postgresql://${PGS_HOST_P}:5432/postgres
-    password: 123456
-    username: postgres
+    jdbcUrl: jdbc:postgresql://${PGS_HOST_P}:5432/${DB_NAME}
+    password: ${DB_PASSWORD}
+    username: ${DB_USER}

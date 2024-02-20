@@ -27,4 +27,6 @@ public interface TransactionDAO {
 
     Boolean updateTransaction(String logId,Transaction transaction,Integer transactionType);
 
+    BigDecimal getTotalAmount(String logId, Integer chruchId);
+
 }

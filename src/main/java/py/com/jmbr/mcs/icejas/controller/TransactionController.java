@@ -23,10 +23,17 @@ public class TransactionController {
     }
 
     @PutMapping("/")
-    @Operation(summary = "udpate a transactions ",description = "udpate a transaction ")
+    @Operation(summary = "update a transactions ",description = "update a transaction ")
     public TransactionPutResData udpateTransactions(@RequestBody @Valid TransactionPostReqData req){
         return transactionService.updateTransaction(req.getData());
     }
+
+    @DeleteMapping("/")
+    @Operation(summary = "get transactions ",description = "Delete transactions that belongs a church ")
+    public TransactionDeleteResData deleteTransaction(@RequestParam(value = "transactionId",required = true)Integer transactionId){
+        return transactionService.deleteTransaction(transactionId);
+    }
+
     @GetMapping("/")
     @Operation(summary = "get transactions ",description = "Get all transactions that belongs a church ")
     public TransactionDetailGetResData getTransactions(

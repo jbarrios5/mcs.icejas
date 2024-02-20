@@ -47,7 +47,9 @@ public class TransactionServiceImpl implements TransactionService{
         else
             totalAmount = totalAmount.add(transaction.getAmount());
 
-        //TODO actualizar el monto en la nueva tabla
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",false);
+        boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),totalAmount);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:After update total amount to church ",isTotalAmountUpdated);
         resultData.setTransactionId(transactionId);
         resultData.setMessage(TransactionConstant.MESSAGE_SUCCESS);
         resultData.setStatus(TransactionConstant.STATUS_OK);
@@ -102,9 +104,9 @@ public class TransactionServiceImpl implements TransactionService{
         TransactionTypesPostRestData result = new TransactionTypesPostRestData();
         TransactionTypesPostRes data  = new TransactionTypesPostRes();
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Starting POST transaction type",null);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Before add transaction type",transactionType.toString());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Before add transaction type",transactionType.toString());
         Boolean isInserted = transactionDAO.addTransactionType(logId,transactionType);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
 
         data.setIsInserted(isInserted);
         result.setData(data);
@@ -119,11 +121,11 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public TransactionReportGetResData getReportMonth(Integer churchId) {
         String logId = RequestUtil.getLogId();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Starting GET transaction report",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Starting GET transaction report",null);
         TransactionReportGetResData result = new TransactionReportGetResData();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Before get transaction report",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getReportMonth:Before get transaction report",null);
         List<TransactionReportGetRes> transactionsReport = transactionDAO.getReportMonth(churchId,logId);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getReportMonth:After get transaction report with result=",transactionsReport.size());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getReportMonth:After get transaction report with result=",transactionsReport.size());
         if(transactionsReport.isEmpty())
             throw new JMBRException("No se obtuvo ningun movimiento", JMBRExceptionType.WARNING, HttpStatus.BAD_REQUEST);
 
@@ -133,15 +135,28 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public TransactionPutResData updateTransaction(TransactionPostReq req) {
+        TransactionPutResData result = new TransactionPutResData();
+        TransactionPutRes data = new TransactionPutRes();
         String logId = RequestUtil.getLogId();
-        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",null);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",null);
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",false);
         boolean isTransactionUpdated = transactionDAO.updateTransaction(logId,req.getTransaction(),req.getTransactionType().getId());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
 
-        //TODO obtener la suma de todo lo debito y credito y actualizar la tabla nueva
+        BigDecimal newTotalAmount = transactionDAO.getTotalAmount(logId,req.getChurch().getId());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",false);
+        boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),newTotalAmount);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",isTotalAmountUpdated);
 
+        data.setMessage("Actualizacion exitosa!");
+        data.setStatus(Boolean.TRUE);
+        result.setData(data);
 
+        return result;
+    }
+
+    @Override
+    public TransactionDeleteResData deleteTransaction(Integer transactionId) {
         return null;
     }
 }
