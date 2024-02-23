@@ -137,7 +137,7 @@ public class TransactionServiceImpl implements TransactionService{
         TransactionPutResData result = new TransactionPutResData();
         TransactionPutRes data = new TransactionPutRes();
         String logId = RequestUtil.getLogId();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",null);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",req.toString());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",false);
         boolean isTransactionUpdated = transactionDAO.updateTransaction(logId,req.getTransaction(),req.getTransactionType().getId());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
@@ -145,7 +145,7 @@ public class TransactionServiceImpl implements TransactionService{
         BigDecimal newTotalAmount = transactionDAO.getTotalAmount(logId,req.getChurch().getId());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",false);
         boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),newTotalAmount);
-        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",isTotalAmountUpdated);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",isTotalAmountUpdated);
 
         data.setMessage("Actualizacion exitosa!");
         data.setStatus(Boolean.TRUE);
@@ -155,7 +155,22 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public TransactionDeleteResData deleteTransaction(Integer transactionId) {
-        return null;
+    public TransactionDeleteResData deleteTransaction(Integer transactionId,Integer churchId) {
+        String logId = RequestUtil.getLogId();
+        TransactionDeleteResData result = new TransactionDeleteResData();
+        TransactionDeleteRes resData = new TransactionDeleteRes();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Starting DELETE transaction id=",transactionId);
+        boolean isUpdatedTransaction = transactionDAO.deleteTransaction(logId,transactionId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:After deleting transaction ",isUpdatedTransaction);
+
+        BigDecimal newTotalAmount = transactionDAO.getTotalAmount(logId,churchId);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Before update total amount to church ",false);
+        boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,churchId,newTotalAmount);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Before update total amount to church ",isTotalAmountUpdated);
+
+        resData.setStatus(Boolean.TRUE);
+        resData.setStatusDescription("Movimiento eliminado exitosamente!");
+        result.setData(resData);
+        return result;
     }
 }

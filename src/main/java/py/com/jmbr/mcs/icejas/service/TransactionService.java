@@ -23,5 +23,5 @@ public interface TransactionService {
 
     TransactionReportGetResData getReportMonth(Integer churchId);
 
-    TransactionDeleteResData deleteTransaction(Integer transactionId);
+    TransactionDeleteResData deleteTransaction(Integer transactionId,Integer churchId);
 }

@@ -30,8 +30,9 @@ public class TransactionController {
 
     @DeleteMapping("/")
     @Operation(summary = "get transactions ",description = "Delete transactions that belongs a church ")
-    public TransactionDeleteResData deleteTransaction(@RequestParam(value = "transactionId",required = true)Integer transactionId){
-        return transactionService.deleteTransaction(transactionId);
+    public TransactionDeleteResData deleteTransaction(@RequestParam(value = "transactionId",required = true)Integer transactionId,
+                                                      @RequestParam(value = "churchId") Integer churchId){
+        return transactionService.deleteTransaction(transactionId,churchId);
     }
 
     @GetMapping("/")
