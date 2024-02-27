@@ -8,3 +8,9 @@ datasource:
     jdbcUrl: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}
     password: ${DB_PASSWORD}
     username: ${DB_USER}
+    maximum-pool-size: 10 # Establecer el tamaño máximo del pool de conexiones
+    idle-timeout: 30000   # Tiempo de espera máximo para conexiones inactivas (en milisegundos)
+    connection-timeout: 10000
+logging:
+  level:
+    root: ${LOG_LEVEL}
