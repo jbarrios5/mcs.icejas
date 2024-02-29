@@ -49,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService{
 
         logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before update total amount to church ",false);
         boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),totalAmount);
-        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:After update total amount to church ",isTotalAmountUpdated);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After update total amount to church ",isTotalAmountUpdated);
         resultData.setTransactionId(transactionId);
         resultData.setMessage(TransactionConstant.MESSAGE_SUCCESS);
         resultData.setStatus(TransactionConstant.STATUS_OK);
@@ -140,7 +140,7 @@ public class TransactionServiceImpl implements TransactionService{
         logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",req.toString());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",false);
         boolean isTransactionUpdated = transactionDAO.updateTransaction(logId,req.getTransaction(),req.getTransactionType().getId());
-        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
 
         BigDecimal newTotalAmount = transactionDAO.getTotalAmount(logId,req.getChurch().getId());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",false);
