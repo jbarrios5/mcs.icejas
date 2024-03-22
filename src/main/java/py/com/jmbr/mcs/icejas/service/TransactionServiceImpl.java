@@ -173,4 +173,21 @@ public class TransactionServiceImpl implements TransactionService{
         result.setData(resData);
         return result;
     }
+
+    @Override
+    public MonthSummaryGetResData getMonthSummary(String startMonth, String endMonth, Integer churchId) {
+        String logId = RequestUtil.getLogId();
+        MonthSummaryGetResData result  = new MonthSummaryGetResData();
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:Starting GET summaryMonths ",startMonth+":"+endMonth);
+        List<MonthSummaryGetRes> summaryMonths = transactionDAO.getSummaryMonths(startMonth,endMonth,churchId,logId);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:After getting summaryMonths ",summaryMonths.size());
+        BigDecimal totalSum = summaryMonths
+                .stream()
+                .map(MonthSummaryGetRes::getTotalSum) // Extraer el valor total de cada objeto MonthSummaryGetRes
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:After getting totalSum =  ",totalSum);
+        result.setMonths(summaryMonths);
+        result.setTotalSum(totalSum);
+        return result;
+    }
 }

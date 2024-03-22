@@ -16,6 +16,7 @@ import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
+import py.com.jmbr.mcs.icejas.mapper.MonthSummaryMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionDetailMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionReportMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionTypeMapper;
@@ -192,6 +193,17 @@ public class TransactionDAOImpl implements TransactionDAO {
             throw new JMBRException("Ocurrio un error al eliminar una transaccion",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return (result >0);
+    }
+
+    @Override
+    public List<MonthSummaryGetRes> getSummaryMonths(String startMonth, String endMonth, Integer churchId, String logId) {
+        try {
+            return jdbcPGS.query(SQLQueries.GET_SUMMARY_MONTH, new Object[]{churchId,buildDate(startMonth),buildDate(endMonth)},new MonthSummaryMapper());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getSummaryMonths:Error getting summary",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener los reportes",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     private String buildGetTransactionDetailQuery(Integer churchId, String startDate, String endDate, Integer activiteType, String transactionType){

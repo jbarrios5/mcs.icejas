@@ -40,7 +40,6 @@ public class IcejasInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        logger.info("Request URI",request.getRequestURI().toString());
         String apiKeyHeader = request.getHeader("apiKey");
 
         if(StringUtils.isBlank(apiKeyHeader))

@@ -89,7 +89,7 @@ public class TransactionController {
 
     @GetMapping("/report")
     @IcejasSecurityAccess(operation = OperationAllow.VERIFY_TOKEN)
-    @Operation(summary = "report balances",description = "Report balances every month ")
+    @Operation(summary = "report balances",description = "Report sum total balances every month ")
     public TransactionReportGetResData getReportMonth(@RequestHeader(value = TransactionConstant.API_KEY,required = true) String apiKey,
                                                       @RequestHeader(value = TransactionConstant.AUTHORIZATION,required = true) String accessToken,
             @RequestParam(value = "churchId",required = true) Integer churchId
@@ -97,6 +97,20 @@ public class TransactionController {
         return transactionService.getReportMonth(churchId);
     }
 
+    @GetMapping("/summary")
+    @IcejasSecurityAccess(operation = OperationAllow.VERIFY_TOKEN)
+    @Operation(summary = "report balances",description = "Report balances every month ")
+    public MonthSummaryGetResData getSummaryMonth(
+            @RequestHeader(value = TransactionConstant.API_KEY,required = true) String apiKey,
+            @RequestHeader(value = TransactionConstant.AUTHORIZATION,required = false) String accessToken,
+            @RequestParam(value = "startDate",required = false) String startDate,
+            @RequestParam(value = "endDate",required = false) String endDate,
+            @RequestParam(value = "churchId",required = true) Integer churchId
+    ){
+
+        return transactionService.getMonthSummary(startDate,endDate,churchId);
+
+    }
 
 
 }
