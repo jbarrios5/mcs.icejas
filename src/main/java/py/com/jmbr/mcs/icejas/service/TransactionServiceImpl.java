@@ -35,7 +35,7 @@ public class TransactionServiceImpl implements TransactionService{
         
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Starting add transaction",req);
 
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add transaction ",transaction);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add transaction ",transaction);
         Integer transactionId = transactionDAO.addTransaction(transaction,req.getChurch().getId(),req.getTransactionType().getId(), req.getUserId());
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add transaction id= ",transactionId);
          
@@ -60,7 +60,7 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public Church getChurch(Integer churchId) {
         String logId = RequestUtil.getLogId();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getChurch:Starting get church",churchId);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getChurch:Starting get church",churchId);
         Church church =  transactionDAO.getChurch(logId,churchId);
         logger.info(RequestUtil.LOG_FORMATT,logId,"getChurch:After get church",church);
         return church;
@@ -105,7 +105,7 @@ public class TransactionServiceImpl implements TransactionService{
         logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Starting POST transaction type",null);
         logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Before add transaction type",transactionType.toString());
         Boolean isInserted = transactionDAO.addTransactionType(logId,transactionType);
-        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
 
         data.setIsInserted(isInserted);
         result.setData(data);

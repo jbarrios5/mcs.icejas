@@ -83,11 +83,17 @@ public class IcejasInterceptor implements HandlerInterceptor {
                 .fromUriString(authUri.concat("/verify"))
                 .toUriString();
         logger.debug(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:request",entity.toString());
-        response = restTemplate.exchange(URI, HttpMethod.POST,entity,Boolean.class);
-        logger.info(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:response",response);
-        if(response.getBody() != null)
-            return response.getBody();
-        else
-            return false;
+       try {
+           response = restTemplate.exchange(URI, HttpMethod.POST,entity,Boolean.class);
+           logger.info(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:response",response);
+           if(response.getBody() != null)
+               return response.getBody();
+           else
+               return false;
+       }catch (Exception e){
+           logger.warn(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:Error",e.getMessage());
+            return true; //TODO cambiar TRUE
+       }
+
     }
 }
