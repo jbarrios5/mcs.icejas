@@ -11,7 +11,7 @@ public class SQLQueries {
     public static final String GET_TRANSACTION_DETAILS =
             "select tr.registered_date ,tr.id  ,amount ,details ,user_id ,ty.name ,ty.category "+
             " from transactions tr " +
-            " join transaction_type ty on ty.id = tr.transaction_type_id" ;
+            " join transaction_type ty on ty.id = tr.transaction_type_id AND tr.status = 'A'" ;
     public static final String GET_TRANSACTIONS_TYPES = "SELECT id,name,category,created FROM transaction_type";
 
     public static final String ADD_TRANSACTION_TYPE = "INSERT INTO transaction_type (name,category)values(?,?)";
@@ -20,8 +20,22 @@ public class SQLQueries {
             "select SUM(CASE WHEN tp.category  = 'D' THEN amount ELSE 0 END) AS egreso, " +
             "    SUM(CASE when tp.category  = 'C' THEN amount ELSE 0 END) AS ingreso, " +
             "   EXTRACT(MONTH FROM t.registered_date) mes " +
-            "    from transactions t join transaction_type tp on tp.id = t.transaction_type_id where  t.church_id = ? GROUP by EXTRACT(MONTH FROM t.registered_date) order by mes ASC";
-    public static final String UPDATE_TRANSACTION = "UPDATE transactions  SET transaction_type_id=? amount=? registered_date=? WHERE id = ?";
+            "    from transactions t join transaction_type tp on tp.id = t.transaction_type_id where  t.status = 'A' AND t.church_id = ? GROUP by EXTRACT(MONTH FROM t.registered_date) order by mes ASC";
 
+    public static final String UPDATE_TRANSACTION = "UPDATE transactions  SET transaction_type_id=?, amount=?, registered_date=? ,details=? WHERE id = ?";
+
+    public static final String GET_CURRENT_BALANCE = "SELECT  (SUM(CASE WHEN tp.category = 'C' THEN amount ELSE 0 END) - SUM(CASE WHEN tp.category = 'D' THEN amount ELSE 0 END)) AS saldo_actual FROM transactions t JOIN transaction_type tp ON tp.id = t.transaction_type_id " +
+            " WHERE t.church_id = ? AND t.status = 'A'";
+    public static final String DELETE_TRANSACTION = "UPDATE transactions  SET status ='I' WHERE id = ?";
+
+    public static final String GET_SUMMARY_MONTH = "select " +
+            "SUM(CASE WHEN tp.category  = 'D' THEN amount ELSE 0 END) AS egreso," +
+            " SUM(CASE when tp.category  = 'C' THEN amount ELSE 0 END) AS ingreso," +
+            " SUM(CASE WHEN tp.category = 'C' THEN amount ELSE -amount END) AS diferencia," +
+            " EXTRACT(MONTH FROM t.registered_date) mes" +
+            " from transactions t" +
+            " join transaction_type tp on tp.id = t.transaction_type_id" +
+            " where  t.status = 'A' AND" +
+            " t.church_id = ? AND t.registered_date >= ? AND t.registered_date <= ?  GROUP by EXTRACT(MONTH FROM t.registered_date) order by mes ASC";
 
 }

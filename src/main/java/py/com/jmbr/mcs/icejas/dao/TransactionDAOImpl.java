@@ -16,12 +16,15 @@ import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.mapper.ChurchMapper;
+import py.com.jmbr.mcs.icejas.mapper.MonthSummaryMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionDetailMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionReportMapper;
 import py.com.jmbr.mcs.icejas.mapper.TransactionTypeMapper;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +47,7 @@ public class TransactionDAOImpl implements TransactionDAO {
                 ps.setBigDecimal(3, transaction.getAmount());
                 ps.setInt(4, churchId);
                 ps.setString(5, transaction.getDetails());
-                ps.setDate(6, transaction.getRegisterDate());
+                ps.setDate(6, buildDate(transaction.getRegisterDate()));
                 return ps;
             }
         }, keyHolder);
@@ -149,7 +152,8 @@ public class TransactionDAOImpl implements TransactionDAO {
             result = jdbcPGS.update(SQLQueries.UPDATE_TRANSACTION,
                     transactionType,
                     transaction.getAmount(),
-                    transaction.getRegisterDate(),
+                    buildDate(transaction.getRegisterDate()) ,
+                    transaction.getDetails(),
                     transaction.getId());
         }catch (DataAccessException e){
             logger.warn(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Error getting transactions",e.getMessage());
@@ -169,7 +173,40 @@ public class TransactionDAOImpl implements TransactionDAO {
         return ((Number) idValue).intValue();
     }
 
-    private String buildGetTransactionDetailQuery(Integer churchId,String startDate,String endDate,Integer activiteType,String transactionType){
+    @Override
+    public BigDecimal getTotalAmount(String logId, Integer chruchId) {
+        try {
+            return jdbcPGS.queryForObject(SQLQueries.GET_CURRENT_BALANCE, new Object[]{chruchId}, BigDecimal.class);
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"newTotalAmount:Error getting total amount",e.getMessage());
+            throw new JMBRException("Ocurrio un error al el nuevo saldo ",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public Boolean deleteTransaction(String logId, Integer transactionId) {
+        int result = 0;
+        try {
+            result = jdbcPGS.update(SQLQueries.DELETE_TRANSACTION, transactionId);
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Error getting total amount",e.getMessage());
+            throw new JMBRException("Ocurrio un error al eliminar una transaccion",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (result >0);
+    }
+
+    @Override
+    public List<MonthSummaryGetRes> getSummaryMonths(String startMonth, String endMonth, Integer churchId, String logId) {
+        try {
+            return jdbcPGS.query(SQLQueries.GET_SUMMARY_MONTH, new Object[]{churchId,buildDate(startMonth),buildDate(endMonth)},new MonthSummaryMapper());
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getSummaryMonths:Error getting summary",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener los reportes",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    private String buildGetTransactionDetailQuery(Integer churchId, String startDate, String endDate, Integer activiteType, String transactionType){
         StringBuilder query  = new StringBuilder();
         query.append(SQLQueries.GET_TRANSACTION_DETAILS);
         query.append( " where tr.church_id = "+churchId.toString()) ;
@@ -186,5 +223,13 @@ public class TransactionDAOImpl implements TransactionDAO {
         query.append(" order by tr.id DESC");
 
         return query.toString();
+    }
+
+    private Date buildDate(String date){
+        // Parsear el String a LocalDate
+        LocalDate fechaLocal = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+
+        // Convertir LocalDate a java.sql.Date
+        return Date.valueOf(fechaLocal);
     }
 }

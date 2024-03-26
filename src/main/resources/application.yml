@@ -5,6 +5,13 @@ server:
     context-path: /@project.artifactId@
 datasource:
   pgs:
-    jdbcUrl: jdbc:postgresql://${PGS_HOST_P}:5432/postgres
-    password: 123456
-    username: postgres
+    jdbcUrl: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}
+    password: ${DB_PASSWORD}
+    username: ${DB_USER}
+    maximum-pool-size: 10 # Establecer el tamaño máximo del pool de conexiones
+    idle-timeout: 30000   # Tiempo de espera máximo para conexiones inactivas (en milisegundos)
+    connection-timeout: 10000
+api:
+  key: icejas-088cad7b-7a3b-4a04-b0c5-f4b0796e5b89
+auth:
+  uri: ${AUTH_URI}

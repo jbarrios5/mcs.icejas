@@ -7,4 +7,8 @@ public class TransactionConstant {
     public static final String MESSAGE_SUCCESS = "Movimiento registrado exitosamente!";
     public static final String TRANSACTION_DEBIT = "D";
 
+    public static final String API_KEY = "apiKey";
+    public static final String AUTHORIZATION = "Authorization";
+
+
 }
