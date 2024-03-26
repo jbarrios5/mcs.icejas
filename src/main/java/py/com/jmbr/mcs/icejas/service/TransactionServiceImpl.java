@@ -33,11 +33,11 @@ public class TransactionServiceImpl implements TransactionService{
         Transaction transaction = req.getTransaction();
         String logId = RequestUtil.getLogId();
         
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Starting add transaction",req);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:Starting add transaction",req);
 
         logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before add transaction ",transaction);
         Integer transactionId = transactionDAO.addTransaction(transaction,req.getChurch().getId(),req.getTransactionType().getId(), req.getUserId());
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add transaction id= ",transactionId);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add transaction id= ",transactionId);
          
         BigDecimal currentAmount = req.getChurch().getCurrentBalance();
 
@@ -49,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService{
 
         logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:Before update total amount to church ",false);
         boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),totalAmount);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:After update total amount to church ",isTotalAmountUpdated);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:After update total amount to church ",isTotalAmountUpdated);
         resultData.setTransactionId(transactionId);
         resultData.setMessage(TransactionConstant.MESSAGE_SUCCESS);
         resultData.setStatus(TransactionConstant.STATUS_OK);
@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService{
         String logId = RequestUtil.getLogId();
         logger.debug(RequestUtil.LOG_FORMATT,logId,"getChurch:Starting get church",churchId);
         Church church =  transactionDAO.getChurch(logId,churchId);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getChurch:After get church",church);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getChurch:After get church",church);
         return church;
     }
 
@@ -71,10 +71,10 @@ public class TransactionServiceImpl implements TransactionService{
         String logId = RequestUtil.getLogId();
         TransactionTypesGetResData result = new TransactionTypesGetResData();
         TransactionTypesGetRes data = new TransactionTypesGetRes();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Starting get transcationTypes",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Starting get transcationTypes",null);
         logger.debug(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:Before get transcationTypes",null);
         List<TransactionType> transactionTypes = transactionDAO.getTransactionTypes(logId);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:After get transcationTypes",transactionTypes.size());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getTransactionTypes:After get transcationTypes",transactionTypes.size());
 
         data.setTransactionTypes(transactionTypes);
         result.setData(data);
@@ -86,11 +86,11 @@ public class TransactionServiceImpl implements TransactionService{
         String logId = RequestUtil.getLogId();
         TransactionDetailGetResData result = new TransactionDetailGetResData();
         TransactionDetailGetRes data = new TransactionDetailGetRes();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Starting GET transaction details",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Starting GET transaction details",null);
         logger.debug(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:Before get all transaction details churchId=",churchId);
 
         List<TransactionDetails> details = transactionDAO.getTransactionDetails(logId,churchId,startDateStr,endDateStr,activiteType,transactionType);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.size());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getTransactionDetails:After get all transaction details churchId=",details.size());
         data.setDetails(details);
         result.setData(data);
 
@@ -102,10 +102,10 @@ public class TransactionServiceImpl implements TransactionService{
         String logId = RequestUtil.getLogId();
         TransactionTypesPostRestData result = new TransactionTypesPostRestData();
         TransactionTypesPostRes data  = new TransactionTypesPostRes();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Starting POST transaction type",null);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Starting POST transaction type",null);
         logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactionType:Before add transaction type",transactionType.toString());
         Boolean isInserted = transactionDAO.addTransactionType(logId,transactionType);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactionType:After add  transaction type result=",isInserted);
 
         data.setIsInserted(isInserted);
         result.setData(data);
@@ -137,15 +137,15 @@ public class TransactionServiceImpl implements TransactionService{
         TransactionPutResData result = new TransactionPutResData();
         TransactionPutRes data = new TransactionPutRes();
         String logId = RequestUtil.getLogId();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",req.toString());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Starting UDPATE transaction",req.toString());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",false);
         boolean isTransactionUpdated = transactionDAO.updateTransaction(logId,req.getTransaction(),req.getTransactionType().getId());
-        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update transaction ",isTransactionUpdated);
 
         BigDecimal newTotalAmount = transactionDAO.getTotalAmount(logId,req.getChurch().getId());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",false);
         boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,req.getChurch().getId(),newTotalAmount);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",isTotalAmountUpdated);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"updateTransaction:Before update total amount to church ",isTotalAmountUpdated);
 
         data.setMessage("Actualizacion exitosa!");
         data.setStatus(Boolean.TRUE);
@@ -159,14 +159,14 @@ public class TransactionServiceImpl implements TransactionService{
         String logId = RequestUtil.getLogId();
         TransactionDeleteResData result = new TransactionDeleteResData();
         TransactionDeleteRes resData = new TransactionDeleteRes();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Starting DELETE transaction id=",transactionId);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Starting DELETE transaction id=",transactionId);
         boolean isUpdatedTransaction = transactionDAO.deleteTransaction(logId,transactionId);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:After deleting transaction ",isUpdatedTransaction);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:After deleting transaction ",isUpdatedTransaction);
 
         BigDecimal newTotalAmount = transactionDAO.getTotalAmount(logId,churchId);
         logger.debug(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Before update total amount to church ",false);
         boolean isTotalAmountUpdated = transactionDAO.updateBalanceChurch(logId,churchId,newTotalAmount);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Before update total amount to church ",isTotalAmountUpdated);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"deleteTransaction:Before update total amount to church ",isTotalAmountUpdated);
 
         resData.setStatus(Boolean.TRUE);
         resData.setStatusDescription("Movimiento eliminado exitosamente!");
@@ -178,14 +178,14 @@ public class TransactionServiceImpl implements TransactionService{
     public MonthSummaryGetResData getMonthSummary(String startMonth, String endMonth, Integer churchId) {
         String logId = RequestUtil.getLogId();
         MonthSummaryGetResData result  = new MonthSummaryGetResData();
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:Starting GET summaryMonths ",startMonth+":"+endMonth);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:Starting GET summaryMonths ",startMonth+":"+endMonth);
         List<MonthSummaryGetRes> summaryMonths = transactionDAO.getSummaryMonths(startMonth,endMonth,churchId,logId);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:After getting summaryMonths ",summaryMonths.size());
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:After getting summaryMonths ",summaryMonths.size());
         BigDecimal totalSum = summaryMonths
                 .stream()
                 .map(MonthSummaryGetRes::getTotalSum) // Extraer el valor total de cada objeto MonthSummaryGetRes
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        logger.info(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:After getting totalSum =  ",totalSum);
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getMonthSummary:After getting totalSum =  ",totalSum);
         result.setMonths(summaryMonths);
         result.setTotalSum(totalSum);
         return result;
