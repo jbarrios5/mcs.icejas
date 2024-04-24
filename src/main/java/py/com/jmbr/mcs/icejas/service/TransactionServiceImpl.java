@@ -1,11 +1,16 @@
 package py.com.jmbr.mcs.icejas.service;
 
+import com.lowagie.text.DocumentException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 import py.com.jmbr.java.commons.beans.mcs.icejas.*;
 import py.com.jmbr.java.commons.domain.mcs.icejas.*;
 import py.com.jmbr.java.commons.exception.JMBRException;
@@ -14,6 +19,8 @@ import py.com.jmbr.java.commons.logger.RequestUtil;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 import py.com.jmbr.mcs.icejas.dao.TransactionDAO;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -26,6 +33,8 @@ public class TransactionServiceImpl implements TransactionService{
     public static final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
     @Autowired
     private TransactionDAO transactionDAO;
+    @Autowired
+    private TemplateEngine templateEngine;
     @Override
     public TransactionPostResData addTransactions(TransactionPostReq req) {
         TransactionPostResData result = new TransactionPostResData();
@@ -190,4 +199,22 @@ public class TransactionServiceImpl implements TransactionService{
         result.setTotalSum(totalSum);
         return result;
     }
+
+    @Override
+    public byte[] getReportPDF(String startMonth, String endMonth, Integer churchId) throws IOException, DocumentException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Context context = new Context();
+        context.setVariable("church","ICEJAS");
+        String html = templateEngine.process("reports",context);
+        ITextRenderer renderer  = new ITextRenderer();
+        renderer.setDocumentFromString(html);
+        renderer.layout();
+        renderer.createPDF(outputStream);
+        byte[] pdfBytes = outputStream.toByteArray();
+
+        outputStream.close();
+
+        return pdfBytes;
+    }
+
 }

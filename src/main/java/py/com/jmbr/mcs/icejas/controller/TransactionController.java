@@ -1,8 +1,13 @@
 package py.com.jmbr.mcs.icejas.controller;
 
+import com.lowagie.text.DocumentException;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import py.com.jmbr.java.commons.beans.mcs.icejas.*;
 import py.com.jmbr.java.commons.context.OperationAllow;
@@ -14,6 +19,7 @@ import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 import py.com.jmbr.mcs.icejas.service.TransactionService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.Date;
 
 @RestController
@@ -110,6 +116,15 @@ public class TransactionController {
 
         return transactionService.getMonthSummary(startDate,endDate,churchId);
 
+    }
+    @PostMapping("/pdf")
+    public ResponseEntity<byte[]>  getReportPDF(@RequestParam(value = "startDate",required = false) String startDate,
+                                                         @RequestParam(value = "endDate",required = false) String endDate,
+                                                         @RequestParam(value = "churchId",required = true) Integer churchId) throws IOException, DocumentException {
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=REPORT.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(transactionService.getReportPDF(startDate,endDate,churchId));
     }
 
 
