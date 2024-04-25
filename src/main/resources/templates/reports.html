@@ -1,14 +1,70 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Reporte ICEJAS</title>
-</head>
+    <title>Reporte de Ingresos y Egresos Mensuales</title>
+    <style>
 
+        h1, h3 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .saldoverde {
+            background-color: palegreen;
+        }
+
+        .saldorojo {
+            background-color: palevioletred;
+        }
+        .saldo{
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
-    <div >
-        <h1 th:text = "${church}" th:style="'font-weight: bold;'"></h1>
-        <h3>Iglesia Cristiana Evangelica de Julian Augusto Saldivar</h3>
-    </div>
+<div>
+    <h1 th:text="${church}"></h1>
+    <h3>Iglesia Cristiana Evangelica de Julian Augusto Saldivar</h3>
+</div>
+<div>
+    <p >Reporte correspondientes de los meses  <strong th:text="'Enero'"></strong> a <strong th:text="'Marzo'"></strong></p>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Mes</th>
+        <th>Ingreso</th>
+        <th>Gastos</th>
+        <th>Saldo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="report : ${reports}">
+        <td th:text="${report.month}" ></td>
+        <td th:text="${report.totalCredit}" ></td>
+        <td th:text="${report.totalDebit}" ></td>
+        <td th:text="${report.totalSum}" th:class="${report.totalSum > 0 ? 'saldoverde saldo' : 'saldorojo saldo'}" > </td>
+    </tr>
+
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="3"><strong>Total</strong></td>
+        <td th:text="${totalAmount}" ><strong>5000</strong></td>
+    </tr>
+    </tfoot>
+</table>
 
 </body>
 </html>

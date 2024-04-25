@@ -202,9 +202,18 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public byte[] getReportPDF(String startMonth, String endMonth, Integer churchId) throws IOException, DocumentException {
+        String logId = RequestUtil.getLogId();
+        logger.debug(RequestUtil.LOG_FORMATT,logId,"getReportPDF:Starting GET summaryMonths ",startMonth+":"+endMonth);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Context context = new Context();
+
+        //get
+        MonthSummaryGetResData monthSummaryGetResData = getMonthSummary(startMonth,endMonth,churchId);
+
         context.setVariable("church","ICEJAS");
+        context.setVariable("reports",monthSummaryGetResData.getMonths());
+        context.setVariable("totalAmount",monthSummaryGetResData.getTotalSum());
+
         String html = templateEngine.process("reports",context);
         ITextRenderer renderer  = new ITextRenderer();
         renderer.setDocumentFromString(html);

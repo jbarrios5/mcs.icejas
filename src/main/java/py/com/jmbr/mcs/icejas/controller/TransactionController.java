@@ -117,14 +117,14 @@ public class TransactionController {
         return transactionService.getMonthSummary(startDate,endDate,churchId);
 
     }
-    @PostMapping("/pdf")
+    @PostMapping(value = "/pdf",produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]>  getReportPDF(@RequestParam(value = "startDate",required = false) String startDate,
                                                          @RequestParam(value = "endDate",required = false) String endDate,
                                                          @RequestParam(value = "churchId",required = true) Integer churchId) throws IOException, DocumentException {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=REPORT.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(transactionService.getReportPDF(startDate,endDate,churchId));
+                .body(transactionService.getReportPDF(startDate,endDate,churchId);
     }
 
 

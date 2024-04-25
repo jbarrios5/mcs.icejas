@@ -1,7 +1,6 @@
 package py.com.jmbr.mcs.icejas.service;
 
 import com.lowagie.text.DocumentException;
-import javassist.bytecode.ByteArray;
 import org.springframework.core.io.ByteArrayResource;
 import py.com.jmbr.java.commons.beans.mcs.icejas.*;
 import py.com.jmbr.java.commons.domain.mcs.icejas.Church;
