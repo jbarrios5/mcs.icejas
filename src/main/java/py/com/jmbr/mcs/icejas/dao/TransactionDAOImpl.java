@@ -176,7 +176,7 @@ public class TransactionDAOImpl implements TransactionDAO {
     @Override
     public BigDecimal getTotalAmount(String logId, Integer chruchId) {
         try {
-            return jdbcPGS.queryForObject(SQLQueries.GET_CURRENT_BALANCE, new Object[]{chruchId}, BigDecimal.class);
+            return jdbcPGS.queryForObject(SQLQueries.GET_NEW_CURRENT_BALANCE, new Object[]{chruchId}, BigDecimal.class);
         }catch (DataAccessException e){
             logger.warn(RequestUtil.LOG_FORMATT,logId,"newTotalAmount:Error getting total amount",e.getMessage());
             throw new JMBRException("Ocurrio un error al el nuevo saldo ",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -204,6 +204,16 @@ public class TransactionDAOImpl implements TransactionDAO {
             throw new JMBRException("Ocurrio un error al obtener los reportes",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @Override
+    public BigDecimal getChurchCurrentBalance(String logId, Integer churchId) {
+        try {
+            return jdbcPGS.queryForObject(SQLQueries.GET_CHURCH_CURRENT_BALANCE, new Object[]{churchId}, BigDecimal.class);
+        }catch (DataAccessException e){
+            logger.warn(RequestUtil.LOG_FORMATT,logId,"getChurchCurrentBalance:Error getting total amount",e.getMessage());
+            throw new JMBRException("Ocurrio un error al obtener el  saldo actual ",JMBRExceptionType.FALTAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private String buildGetTransactionDetailQuery(Integer churchId, String startDate, String endDate, Integer activiteType, String transactionType){

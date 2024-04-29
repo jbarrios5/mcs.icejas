@@ -124,7 +124,7 @@ public class TransactionController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=REPORT.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(transactionService.getReportPDF(startDate,endDate,churchId);
+                .body(transactionService.getReportPDF(startDate,endDate,churchId));
     }
 
 

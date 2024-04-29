@@ -48,7 +48,8 @@ public class TransactionServiceImpl implements TransactionService{
         Integer transactionId = transactionDAO.addTransaction(transaction,req.getChurch().getId(),req.getTransactionType().getId(), req.getUserId());
         logger.debug(RequestUtil.LOG_FORMATT,logId,"addTransactions:After add transaction id= ",transactionId);
          
-        BigDecimal currentAmount = req.getChurch().getCurrentBalance();
+        BigDecimal currentAmount = transactionDAO.getChurchCurrentBalance(logId,req.getChurch().getId());
+        logger.info(RequestUtil.LOG_FORMATT,logId,"addTransactions:Current balances",currentAmount);
 
         BigDecimal totalAmount = currentAmount;
         if(req.getTransactionType().getCategory().equals(TransactionConstant.TRANSACTION_DEBIT))

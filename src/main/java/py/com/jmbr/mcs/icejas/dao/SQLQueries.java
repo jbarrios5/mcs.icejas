@@ -24,7 +24,7 @@ public class SQLQueries {
 
     public static final String UPDATE_TRANSACTION = "UPDATE transactions  SET transaction_type_id=?, amount=?, registered_date=? ,details=? WHERE id = ?";
 
-    public static final String GET_CURRENT_BALANCE = "SELECT  (SUM(CASE WHEN tp.category = 'C' THEN amount ELSE 0 END) - SUM(CASE WHEN tp.category = 'D' THEN amount ELSE 0 END)) AS saldo_actual FROM transactions t JOIN transaction_type tp ON tp.id = t.transaction_type_id " +
+    public static final String GET_NEW_CURRENT_BALANCE = "SELECT  (SUM(CASE WHEN tp.category = 'C' THEN amount ELSE 0 END) - SUM(CASE WHEN tp.category = 'D' THEN amount ELSE 0 END)) AS saldo_actual FROM transactions t JOIN transaction_type tp ON tp.id = t.transaction_type_id " +
             " WHERE t.church_id = ? AND t.status = 'A'";
     public static final String DELETE_TRANSACTION = "UPDATE transactions  SET status ='I' WHERE id = ?";
 
@@ -37,5 +37,5 @@ public class SQLQueries {
             " join transaction_type tp on tp.id = t.transaction_type_id" +
             " where  t.status = 'A' AND" +
             " t.church_id = ? AND t.registered_date >= ? AND t.registered_date <= ?  GROUP by EXTRACT(MONTH FROM t.registered_date) order by mes ASC";
-
+    public static final String GET_CHURCH_CURRENT_BALANCE = "select current_balance  from church c where c.id = ?";
 }

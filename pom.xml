@@ -67,6 +67,9 @@
 			<artifactId>java.commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
+
+
 	</dependencies>
 
 	<build>

@@ -32,4 +32,6 @@ public interface TransactionDAO {
     Boolean deleteTransaction(String logId,Integer transactionId);
 
     List<MonthSummaryGetRes> getSummaryMonths(String startMonth,String endMonth,Integer churchId,String logId);
+
+    BigDecimal getChurchCurrentBalance(String logId,Integer churchId);
 }
