@@ -3,6 +3,17 @@ server:
   port: 8083
   servlet:
     context-path: /@project.artifactId@
+springdoc:
+  show-actuator: true
+management:
+  endpoint:
+  metrics:
+    tags:
+      application: '@project.artifactId@'
+  endpoints:
+    web:
+      exposure:
+        include: health, info,metrics,prometheus, caches
 datasource:
   pgs:
     jdbcUrl: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}
