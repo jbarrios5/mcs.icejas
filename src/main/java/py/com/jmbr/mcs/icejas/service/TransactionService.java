@@ -31,5 +31,5 @@ public interface TransactionService {
 
     MonthSummaryGetResData getMonthSummary(String startMonth,String endMonth,Integer churchId);
 
-    byte[] getReportPDF(String startMonth, String endMonth, Integer churchId) throws IOException, DocumentException;
+    byte[] getReportPDF(String startMonth, String endMonth,Integer year, Integer churchId) throws IOException, DocumentException;
 }
