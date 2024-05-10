@@ -70,14 +70,14 @@ public class TransactionController {
         return transactionService.getTransactionDetails(churchId,startDate,endDate,activiteType,transactionType);
     }
     @GetMapping("/types")
-    @IcejasSecurityAccess(operation = OperationAllow.VERIFY_TOKEN)
+    @IcejasSecurityAccess(operation = OperationAllow.POST_LOGIN)
     @Operation(summary = "get transactions types",description = "Get all transactions types ")
     public TransactionTypesGetResData getTransactionTypes(@RequestHeader(value = TransactionConstant.API_KEY,required = true) String apiKey,
                                                           @RequestHeader(value = TransactionConstant.AUTHORIZATION,required = true) String accessToken){
         return transactionService.getTransactionTypes();
     }
     @GetMapping("/church")
-    @IcejasSecurityAccess(operation = OperationAllow.VERIFY_TOKEN)
+    @IcejasSecurityAccess(operation = OperationAllow.POST_LOGIN)
     @Operation(summary = "get church",description = "Get church details ")
     public Church getChurch(@RequestHeader(value = TransactionConstant.API_KEY,required = true) String apiKey,
                             @RequestHeader(value = TransactionConstant.AUTHORIZATION,required = true) String accessToken,@RequestParam(value = "church_id",required = true) Integer churchId){
