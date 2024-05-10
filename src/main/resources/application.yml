@@ -6,7 +6,6 @@ server:
 springdoc:
   show-actuator: true
 management:
-  endpoint:
   metrics:
     tags:
       application: '@project.artifactId@'
@@ -28,4 +27,4 @@ auth:
   uri: ${AUTH_URI}
 logging:
   level:
-    py.com.jmbr.mcs.icejas: DEBUG
+    py.com.jmbr.mcs.icejas: INFO

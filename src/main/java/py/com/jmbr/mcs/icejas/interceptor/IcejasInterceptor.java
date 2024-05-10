@@ -5,18 +5,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
+import py.com.jmbr.java.commons.context.OperationAllow;
 import py.com.jmbr.java.commons.exception.JMBRException;
 import py.com.jmbr.java.commons.exception.JMBRExceptionType;
 import py.com.jmbr.java.commons.logger.RequestUtil;
+import py.com.jmbr.mcs.icejas.annotation.IcejasSecurityAccess;
 import py.com.jmbr.mcs.icejas.constant.TransactionConstant;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +52,15 @@ public class IcejasInterceptor implements HandlerInterceptor {
         if(!apiKeyHeader.equals(apiKey))
             throw new JMBRException("ApiKey invalid", JMBRExceptionType.FALTAL, HttpStatus.BAD_REQUEST);
 
+        HandlerMethod method = (HandlerMethod) handler;
+        IcejasSecurityAccess securityAccess = AnnotationUtils.findAnnotation(method.getMethod(), IcejasSecurityAccess.class);
+        logger.debug(RequestUtil.LOG_FORMATT,"no-log-id","preHandle:annotation securityAccess=",securityAccess);
+        if(securityAccess.operation() == OperationAllow.POST_LOGIN){
+            logger.debug(RequestUtil.LOG_FORMATT,"no-log-id","preHandle:not required accessToken",null);
+            return Boolean.TRUE;
+        }
+
+        logger.debug(RequestUtil.LOG_FORMATT,"no-log-id","preHandle: required accessToken",null);
         String accessToken = request.getHeader("Authorization");
         if(StringUtils.isBlank(accessToken))
             throw new JMBRException("AT is required", JMBRExceptionType.FALTAL, HttpStatus.BAD_REQUEST);
@@ -85,11 +98,11 @@ public class IcejasInterceptor implements HandlerInterceptor {
         logger.debug(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:request",entity.toString());
        try {
            response = restTemplate.exchange(URI, HttpMethod.POST,entity,Boolean.class);
-           logger.debug(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:response",response);
+           logger.debug(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:response",response.getBody().toString());
            if(response.getBody() != null)
                return response.getBody();
            else
-               return false;
+               return true;
        }catch (Exception e){
            logger.warn(RequestUtil.LOG_FORMATT,"no-log-id","isAccessTokenValid:Error",e.getMessage());
             return true;
